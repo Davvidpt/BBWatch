@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b111d">
+  <title>BB Watch — Squeeze Monitor</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="backdrop-grid" aria-hidden="true"></div>
+  <div id="auth" class="auth-wrap hidden">
+    <div class="auth-panel">
+      <div class="brand brand-auth"><div class="logo-mark">◈</div><span>BB<span class="brand-accent">WATCH</span></span></div>
+      <div class="eyebrow">PRIVATE MONITORING CONSOLE</div>
+      <h1>Selamat datang<br><span>kembali.</span></h1>
+      <p class="auth-copy">Masuk untuk mengelola daftar instrumen crypto yang dipantau dan notifikasi Telegram.</p>
+      <form id="login-form">
+        <label for="password">Password dashboard</label>
+        <div class="password-row"><input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password admin" required autofocus><button id="show-password" type="button" title="Tampilkan password" aria-label="Tampilkan password">◉</button></div>
+        <button type="submit" class="primary-btn full">Masuk ke dashboard <span>↗</span></button>
+      </form>
+      <p id="login-error" class="form-error" role="alert"></p>
+      <div class="auth-footer"><span class="pulse-dot"></span> Read-only crypto market monitoring</div>
+    </div>
+  </div>
+  <div id="loading" class="loading-screen"><span class="spinner"></span><span>Memuat dashboard...</span></div>
+  <div id="dashboard" class="app-shell hidden">
+    <aside class="sidebar">
+      <div class="brand"><div class="logo-mark">◈</div><span>BB<span class="brand-accent">WATCH</span></span></div>
+      <div class="nav-label">WORKSPACE</div>
+      <div class="nav-link selected"><span class="nav-glyph">▤</span> Overview <span class="nav-indicator"></span></div>
+      <div class="nav-link subdued"><span class="nav-glyph">◫</span> 1H Market Scanner</div>
+      <div class="sidebar-bottom">
+        <div class="status-panel"><div class="status-panel-icon">◉</div><div><b>Alert-only mode</b><small>Tidak melakukan trading otomatis</small></div></div>
+        <button id="logout" class="logout-btn">⇥ <span>Keluar dari dashboard</span></button>
+      </div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div class="crumb">Workspace <span>/</span> <b>Overview</b></div><div class="topbar-right"><span class="connection-pill"><span class="pulse-dot"></span> Monitoring Console</span><div class="avatar" aria-label="Admin">AD</div></div></header>
+      <div class="content-area">
+        <div class="page-head"><div><div class="eyebrow head-eyebrow">MARKET OBSERVABILITY / VERSION 1.0</div><h1>Bollinger Bands <span>Squeeze Monitor</span></h1><p>Pantau volatilitas crypto dalam satu tempat. Kelola instrumen dan terima alert otomatis lewat Telegram.</p></div><div class="head-actions"><button class="outline-btn" id="test-telegram">↗ &nbsp; Tes Telegram</button><button class="primary-btn" id="scan-now"><span class="btn-icon">◌</span> Scan sekarang</button></div></div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-top"><span>Total instrumen</span><div class="stat-icon cyan">▤</div></div><div class="stat-value" id="stat-total">—</div><div class="stat-note">Dalam watchlist</div></div>
+          <div class="stat-card"><div class="stat-top"><span>Aktif dipantau</span><div class="stat-icon blue">◉</div></div><div class="stat-value" id="stat-active">—</div><div class="stat-note"><span class="tiny-dot green"></span> Scanner 1H</div></div>
+          <div class="stat-card"><div class="stat-top"><span>Sedang squeeze</span><div class="stat-icon orange">◈</div></div><div class="stat-value" id="stat-squeeze">—</div><div class="stat-note">Volatilitas relatif rendah</div></div>
+          <div class="stat-card"><div class="stat-top"><span>Alert scan terakhir</span><div class="stat-icon violet">↗</div></div><div class="stat-value small" id="stat-alerts">—</div><div class="stat-note" id="stat-alerts-note">Hasil scan terakhir</div></div>
+        </div>
+        <section class="watchlist card">
+          <div class="card-header"><div><div class="eyebrow">CONFIGURATION</div><h2>Instrumen yang dipantau</h2><p>Tambah pasangan crypto Binance Spot. Semua menggunakan timeframe <strong>1 jam</strong>.</p></div><span class="count-pill" id="count-pill">0 / 20 instrumen</span></div>
+          <form id="add-form" class="instrument-form"><div class="input-unit"><span class="input-prefix">⌕</span><input id="symbol-input" type="text" inputmode="text" placeholder="Masukkan simbol, contoh: BTCUSDT atau BTC/USDT" maxlength="30" aria-label="Simbol instrumen crypto" required spellcheck="false" autocomplete="off"></div><button class="primary-btn add-btn" type="submit">＋ &nbsp; Tambah instrumen</button></form>
+          <div class="quick-add"><span>COBA TAMBAHKAN</span><button class="quick-chip" data-symbol="BTCUSDT">BTC / USDT <b>＋</b></button><button class="quick-chip" data-symbol="ETHUSDT">ETH / USDT <b>＋</b></button><button class="quick-chip" data-symbol="SOLUSDT">SOL / USDT <b>＋</b></button></div>
+          <div class="table-wrap"><table class="asset-table"><thead><tr><th>INSTRUMEN</th><th>STATUS BAND</th><th>BANDWIDTH / P20</th><th>HARGA CLOSE</th><th>WAKTU SCAN</th><th class="align-right">AKSI</th></tr></thead><tbody id="asset-rows"><tr><td colspan="6" class="empty-state">Memuat instrumen...</td></tr></tbody></table></div>
+          <div class="table-foot"><span><span class="tiny-dot green"></span> Semua data berasal dari candle 1H yang telah ditutup</span><span id="last-scan">Belum ada scan</span></div>
+        </section>
+        <div class="bottom-grid"><section class="info-card"><div class="info-icon">◷</div><div><h3>Cara kerja squeeze alert</h3><p>BandWidth saat ini dibandingkan dengan persentil ke-20 dari 120 candle historis. Alert dikirim hanya ketika kondisi berpindah dari normal ke squeeze pada candle 1H yang telah ditutup.</p><div class="formula">BB(20, 2) <span>·</span> P20 / 120 candle <span>·</span> Closed candles only</div></div></section><section class="info-card"><div class="info-icon paper-plane">➤</div><div><h3>Notifikasi ke Telegram</h3><p>Bot mengirim peringatan ke grup yang kamu konfigurasi. Menonaktifkan instrumen menghentikan pemantauannya tanpa menghapusnya dari daftar.</p><div class="formula">Monitor only <span>·</span> No trading API keys</div></div></section></div>
+        <footer class="page-footer"><span>BB WATCH / v1.0</span><span>Educational monitoring only — bukan rekomendasi investasi.</span></footer>
+      </div>
+    </main>
+  </div>
+  <div id="toast" class="toast hidden" role="status"></div>
+</body>
+</html>

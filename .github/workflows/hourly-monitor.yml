@@ -1,0 +1,24 @@
+name: Hourly BB Squeeze Scan (Vercel Hobby)
+on:
+  schedule:
+    - cron: '13 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Trigger secured monitor endpoint
+        env:
+          MONITOR_URL: ${{ secrets.MONITOR_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          test -n "$MONITOR_URL"
+          test -n "$CRON_SECRET"
+          curl --fail-with-body --retry 2 --retry-delay 4 --max-time 90 \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            "${MONITOR_URL%/}/api/monitor"
